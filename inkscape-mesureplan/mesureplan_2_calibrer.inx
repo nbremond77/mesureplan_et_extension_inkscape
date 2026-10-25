@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+  <name>2. Calibrer sur une cote…</name>
+  <id>fr.mesureplan.calibrer</id>
+  <param name="action" type="string" gui-hidden="true">calibrer</param>
+  <label>Sélectionnez un trait (outil Plume, 2 clics accrochés aux extrémités d'une cote du plan), puis saisissez la cote réelle.</label>
+  <param name="longueur" type="float" min="0.001" max="1000000" precision="3" gui-text="Cote réelle :">1.000</param>
+  <param name="unite_saisie" type="optiongroup" appearance="combo" gui-text="Unité :">
+    <option value="m">m</option>
+    <option value="cm">cm</option>
+    <option value="mm">mm</option>
+  </param>
+  <param name="mode_reference" type="optiongroup" appearance="radio" gui-text="Cotes déjà enregistrées :">
+    <option value="remplacer">Remplacer (nouvelle calibration)</option>
+    <option value="ajouter">Ajouter (moyenne + contrôle de cohérence)</option>
+  </param>
+  <param name="marquer_reference" type="bool" gui-text="Styler le trait en référence (vert pointillé)">true</param>
+  <effect needs-live-preview="false">
+    <object-type>all</object-type>
+    <effects-menu><submenu name="Mesure de plan"/></effects-menu>
+  </effect>
+  <script><command location="inx" interpreter="python">mesureplan_ink.py</command></script>
+</inkscape-extension>

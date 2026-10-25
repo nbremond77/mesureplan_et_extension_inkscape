@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+  <name>5. Mesurer avec options…</name>
+  <id>fr.mesureplan.mesurer_options</id>
+  <param name="action" type="string" gui-hidden="true">mesurer</param>
+  <param name="onglet" type="notebook">
+    <page name="options" gui-text="Options">
+      <param name="mode" type="optiongroup" appearance="combo" gui-text="Type de mesure :">
+        <option value="auto">Automatique (fermé → surface, sinon longueur)</option>
+        <option value="longueur">Longueur (même pour un tracé fermé)</option>
+        <option value="surface">Surface (ferme le tracé si besoin)</option>
+        <option value="angle">Angle (3 nœuds, ou 2 traits)</option>
+      </param>
+      <param name="unite" type="optiongroup" appearance="combo" gui-text="Unité des longueurs :">
+        <option value="config">Selon la configuration</option>
+        <option value="m">m</option>
+        <option value="cm">cm</option>
+        <option value="mm">mm</option>
+      </param>
+      <param name="decimales" type="int" min="-1" max="6" gui-text="Décimales (−1 = configuration) :">-1</param>
+      <param name="etiquettes" type="bool" gui-text="Poser les étiquettes dans le calque « Mesures »">true</param>
+      <param name="fichier_csv" type="path" mode="file_new" filetypes="csv" gui-text="Ajouter au fichier CSV (facultatif) :"></param>
+    </page>
+    <page name="aide" gui-text="Aide">
+      <label>Automatique : tracé fermé (rectangle, polygone, Z) → surface + périmètre ; 2 nœuds → distance ; plus de nœuds → longueur cumulée (Σ).</label>
+      <label>Angle : un tracé de 3 nœuds (point du 1er bras, sommet, point du 2e bras) ou deux traits de 2 nœuds (angle aigu / obtus).</label>
+      <label>Plusieurs objets sélectionnés : totaux affichés dans le résumé.</label>
+    </page>
+  </param>
+  <effect needs-live-preview="false">
+    <object-type>all</object-type>
+    <effects-menu><submenu name="Mesure de plan"/></effects-menu>
+  </effect>
+  <script><command location="inx" interpreter="python">mesureplan_ink.py</command></script>
+</inkscape-extension>

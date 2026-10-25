@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+  <name>1. Échelle du cartouche…</name>
+  <id>fr.mesureplan.echelle</id>
+  <param name="action" type="string" gui-hidden="true">echelle</param>
+  <param name="source" type="optiongroup" appearance="radio" gui-text="Origine de l'échelle :">
+    <option value="saisie">Saisie ci-dessous</option>
+    <option value="lire">Lire dans le texte du cartouche (« Échelle 1/100 »…)</option>
+  </param>
+  <param name="denominateur" type="float" min="0.01" max="100000" precision="2" gui-text="Échelle 1 : ">100</param>
+  <param name="reinitialiser" type="bool" gui-text="Effacer les cotes de référence (repartir du cartouche)">false</param>
+  <label appearance="header">Rappel</label>
+  <label>L'échelle est mémorisée dans le document. Une calibration sur cote connue reste prioritaire : utilisez « 2. Calibrer » pour vérifier.</label>
+  <effect needs-live-preview="false">
+    <object-type>all</object-type>
+    <effects-menu><submenu name="Mesure de plan"/></effects-menu>
+  </effect>
+  <script><command location="inx" interpreter="python">mesureplan_ink.py</command></script>
+</inkscape-extension>

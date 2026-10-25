@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+  <name>3. Mesurer la sélection</name>
+  <id>fr.mesureplan.mesurer_rapide</id>
+  <param name="action" type="string" gui-hidden="true">mesurer</param>
+  <param name="mode" type="string" gui-hidden="true">auto</param>
+  <param name="rapide" type="bool" gui-hidden="true">true</param>
+  <effect needs-live-preview="false">
+    <object-type>all</object-type>
+    <effects-menu><submenu name="Mesure de plan"/></effects-menu>
+  </effect>
+  <script><command location="inx" interpreter="python">mesureplan_ink.py</command></script>
+</inkscape-extension>

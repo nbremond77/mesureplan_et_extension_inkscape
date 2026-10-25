@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=MesurePlan
+GenericName=Métré de plans PDF
+Comment=Mesures à l'échelle, annotations et impression de plans PDF vectoriels
+# Adapter le chemin après décompression de l'archive Linux (ex. ~/Applications/MesurePlan)
+Exec=/opt/MesurePlan/MesurePlan %f
+Icon=/opt/MesurePlan/_internal/mesureplan/icone.png
+Terminal=false
+Categories=Graphics;Engineering;Office;
+MimeType=application/pdf;

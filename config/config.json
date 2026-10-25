@@ -1,0 +1,53 @@
+{
+  "journalisation": {
+    "niveau": "INFO",
+    "fichier": "logs/mesureplan.log",
+    "taille_max_octets": 1048576,
+    "nombre_sauvegardes": 5
+  },
+  "rendu": {
+    "pixels_max_fond": 16000000,
+    "pixels_max_detail": 12000000,
+    "zoom_max_fond": 4.0,
+    "delai_rendu_detail_ms": 150
+  },
+  "accrochage": {
+    "actif": true,
+    "tolerance_pixels": 12,
+    "extremites": true,
+    "milieux": true,
+    "intersections": true,
+    "sur_trait": true,
+    "segments_max_intersections": 40
+  },
+  "contrainte": {
+    "pas_angle_degres": 45
+  },
+  "echelle": {
+    "denominateur_defaut": 100,
+    "echelles_proposees": [1, 2, 5, 10, 20, 25, 50, 75, 100, 125, 200, 250, 500, 1000, 2000, 2500, 5000],
+    "detection_automatique": true,
+    "seuil_alerte_ecart_pct": 2.0,
+    "seuil_alerte_dispersion_pct": 1.0
+  },
+  "affichage": {
+    "unite_longueur": "m",
+    "decimales_longueur": { "m": 2, "cm": 1, "mm": 0 },
+    "decimales_surface": 2,
+    "decimales_angle": 1,
+    "couleur_mesures": "#E4572E",
+    "couleur_selection": "#1F77D0",
+    "couleur_references": "#2E9E4F",
+    "couleur_apercu": "#D81B60",
+    "taille_police_etiquettes": 9
+  },
+  "session": {
+    "sauvegarde_auto": true,
+    "suffixe_fichier": ".mesures.json"
+  },
+  "export": {
+    "separateur_csv": ";",
+    "separateur_decimal": ",",
+    "encodage": "utf-8-sig"
+  }
+}

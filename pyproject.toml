@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mesureplan"
+version = "1.3.0"
+description = "Métré et annotation de plans PDF vectoriels : mesures à l’échelle avec calibration, flèches, formes, textes, export PDF annoté, impression à l’échelle."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "AGPL-3.0-or-later" }  # imposé par PyMuPDF (AGPL)
+authors = [{ name = "Bernard" }]
+dependencies = [
+    "PySide6>=6.6",
+    "PyMuPDF>=1.24",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+build = ["pyinstaller>=6.6"]
+
+[project.gui-scripts]
+mesureplan = "mesureplan.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+mesureplan = ["config_defaut.json", "icone.png"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

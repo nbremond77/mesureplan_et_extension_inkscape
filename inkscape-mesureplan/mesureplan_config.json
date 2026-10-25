@@ -1,0 +1,22 @@
+{
+  "journalisation": {
+    "niveau": "INFO",
+    "niveau_console": "ERROR",
+    "fichier": "logs/mesureplan.log",
+    "taille_max_octets": 524288,
+    "nombre_sauvegardes": 3
+  },
+  "echelle": {
+    "denominateur_defaut": 100
+  },
+  "affichage": {
+    "unite": "m",
+    "decimales": { "m": 2, "cm": 1, "mm": 0 },
+    "decimales_surface": 2,
+    "decimales_angle": 1,
+    "taille_police_mm": 2.5,
+    "couleur_etiquettes": "#C0392B",
+    "couleur_reference": "#2E9E4F",
+    "resume_en_mode_rapide": false
+  }
+}

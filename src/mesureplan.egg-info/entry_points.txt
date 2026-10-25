@@ -1,0 +1,2 @@
+[gui_scripts]
+mesureplan = mesureplan.app:main
