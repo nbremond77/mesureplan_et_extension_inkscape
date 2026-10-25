@@ -5,6 +5,10 @@ name: Exécutables
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Étiquette de la release à créer (ex. v1.3.0) — vide : pas de publication"
+        required: false
   push:
     tags: ["v*"]
 
@@ -60,7 +64,7 @@ jobs:
           path: MesurePlan-${{ matrix.nom }}.*
 
   publication:
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') || inputs.version != ''
     needs: construction
     runs-on: ubuntu-latest
     permissions:
@@ -72,4 +76,5 @@ jobs:
           merge-multiple: true
       - uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ inputs.version || github.ref_name }}
           files: archives/*
