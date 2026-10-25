@@ -95,3 +95,7 @@ plans/
 Thumbs.db
 desktop.ini
 .directory
+# Exécutables : publiés en Release GitHub, jamais versionnés
+release/
+*.zip
+*.tar.gz
