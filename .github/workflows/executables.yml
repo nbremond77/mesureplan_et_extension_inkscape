@@ -16,10 +16,10 @@ jobs:
         include:
           - os: windows-latest
             nom: windows-x64
-          - os: macos-14          # Apple Silicon (arm64)
-            nom: macos-arm64
-          - os: macos-13          # Intel (x86_64)
-            nom: macos-x86_64
+          #- os: macos-14          # Apple Silicon (arm64)
+          #  nom: macos-arm64
+          #- os: macos-13          # Intel (x86_64)
+          #  nom: macos-x86_64
           - os: ubuntu-22.04      # glibc 2.35 : fonctionne sur les distributions récentes (Manjaro, Ubuntu 22.04+…)
             nom: linux-x86_64
     runs-on: ${{ matrix.os }}
