@@ -187,3 +187,4 @@ mosaïque et recouvrement, barre d'échelle), sans dépendance graphique.
 - **Licence** : PyMuPDF est sous AGPL v3. Usage personnel sans contrainte ; en cas de diffusion de
   l'application, le code doit rester sous licence compatible AGPL.
 # mesureplan_et_extension_inkscape
+# mesureplan_et_extension_inkscape
