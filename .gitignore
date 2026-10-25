@@ -1,0 +1,97 @@
+# .gitignore — dépôt mesureplan_et_extension_inkscape
+# À placer à la racine du dépôt (à côté des dossiers mesureplan/ et inkscape-mesureplan/).
+# Les motifs sans « / » initial s'appliquent à tous les sous-dossiers.
+
+# ---------------------------------------------------------------------------
+# Python : caches et compilation
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# ---------------------------------------------------------------------------
+# Environnements virtuels (dont celui des scripts packaging/construire.*)
+# ---------------------------------------------------------------------------
+.venv/
+.venv-*/
+venv/
+env/
+.python-version
+
+# ---------------------------------------------------------------------------
+# Construction du paquet et des exécutables (setuptools, PyInstaller)
+# NB : on n'ignore PAS « *.spec » (contrairement au modèle Python de GitHub) :
+#      packaging/mesureplan.spec est la recette des exécutables et doit être versionnée.
+# ---------------------------------------------------------------------------
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+livraison/
+
+# ---------------------------------------------------------------------------
+# Tests et outils qualité
+# ---------------------------------------------------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# ---------------------------------------------------------------------------
+# Journaux (application et extension Inkscape)
+# ---------------------------------------------------------------------------
+logs/
+*.log
+*.log.[0-9]*
+
+# ---------------------------------------------------------------------------
+# Secrets — convention store_secure_credentials.py : ne JAMAIS versionner
+# ---------------------------------------------------------------------------
+.secure_store.enc
+.secure_key
+.env
+.env.*
+
+# ---------------------------------------------------------------------------
+# Données de travail produites par MesurePlan à côté des plans
+# (sessions de mesures, exports, PDF d'impression)
+# ---------------------------------------------------------------------------
+*.mesures.json
+*.mesures.json.tmp
+*_mesures.csv
+*_annote.pdf
+*_impression_p*.pdf
+# Plans personnels éventuellement copiés dans le dépôt pour essai :
+# seul le plan d'essai fourni est conservé.
+plans/
+
+# ---------------------------------------------------------------------------
+# Typst : seuls les PDF de docs/ sont versionnés (livrables de documentation)
+# ---------------------------------------------------------------------------
+*.pdf
+!mesureplan/docs/*.pdf
+!mesureplan/exemples/*.pdf
+
+# ---------------------------------------------------------------------------
+# Éditeurs et IDE
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.kate-swp
+*.kate-swp
+
+# ---------------------------------------------------------------------------
+# Fichiers système
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+.directory
