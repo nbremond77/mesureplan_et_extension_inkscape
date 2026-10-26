@@ -29,13 +29,16 @@ from mesureplan.vue_plan import ANNOTATION_PAR_OUTIL, Outil, VuePlan
 journal = logging.getLogger(__name__)
 
 # Correspondance outil → type de mesure du modèle
-TYPE_PAR_OUTIL = {Outil.DISTANCE: TypeMesure.DISTANCE, Outil.CHAINE: TypeMesure.CHAINE,
+TYPE_PAR_OUTIL = {Outil.DISTANCE: TypeMesure.DISTANCE, Outil.DISTANCE_XY: TypeMesure.DISTANCE_XY,
+                  Outil.CHAINE: TypeMesure.CHAINE,
                   Outil.SURFACE: TypeMesure.SURFACE, Outil.ANGLE: TypeMesure.ANGLE}
 
 # (outil, nom d'icône, raccourci, info-bulle)
 DEFINITION_OUTILS = [
     (Outil.NAVIGATION, "navigation", "N", "Naviguer (N ou Échap) — glisser pour déplacer, clic pour sélectionner"),
     (Outil.DISTANCE, "distance", "D", "Distance entre deux points (D)"),
+    (Outil.DISTANCE_XY, "distance_xy", "X",
+     "Distance décomposée (X) — longueur, ΔX horizontal, ΔY vertical et angle / horizontale"),
     (Outil.CHAINE, "chaine", "L", "Chaîne de cotes cumulées (L) — double-clic, Entrée ou clic droit pour terminer"),
     (Outil.SURFACE, "surface", "S", "Surface et périmètre (S) — double-clic, Entrée ou clic droit pour fermer"),
     (Outil.ANGLE, "angle", "A", "Angle (A) — point du 1er bras, sommet, point du 2e bras"),
@@ -57,7 +60,7 @@ LIMITE_HISTORIQUE = 100
 
 AIDE = """
 <h3>MesurePlan {version}</h3>
-<p><b>Outils</b> : N naviguer · D distance · L chaîne · S surface · A angle · C calibrer.
+<p><b>Outils</b> : N naviguer · D distance · X distance décomposée (ΔX, ΔY, angle) · L chaîne · S surface · A angle · C calibrer.
 Le <b>clic droit</b> termine le tracé en cours (s'il est valide) et revient à l'outil Naviguer.</p>
 <p><b>Édition (outil Naviguer)</b> : glisser une mesure ou une annotation la déplace (Maj :
 horizontal / vertical) ; glisser une poignée carrée déplace le sommet, avec accrochage ; la poignée
@@ -492,6 +495,11 @@ class FenetrePrincipale(QMainWindow):
         if outil in (Outil.DISTANCE, Outil.CALIBRATION):
             texte = f.longueur(echelle.longueur_m(geo.distance(points[0], points[-1])))
             return texte + ("\n(au cartouche)" if outil is Outil.CALIBRATION else "")
+        if outil is Outil.DISTANCE_XY:
+            dx, dy, angle, _orientation = geo.composantes(points[0], points[-1])
+            return (f"L {f.longueur(echelle.longueur_m(geo.distance(points[0], points[-1])))}\n"
+                    f"ΔX {f.longueur(echelle.longueur_m(abs(dx)))}   ΔY {f.longueur(echelle.longueur_m(abs(dy)))}\n"
+                    f"{f.angle(angle)} / horizontale")
         if outil is Outil.CHAINE:
             dernier = f.longueur(echelle.longueur_m(geo.distance(points[-2], points[-1])))
             return f"{dernier}\nΣ {f.longueur(echelle.longueur_m(geo.longueur_polyligne(points)))}"
@@ -525,6 +533,8 @@ class FenetrePrincipale(QMainWindow):
             Outil.NAVIGATION: "Clic : sélection · glisser un élément : déplacer · poignées : sommets / rotation · "
                               "glisser le fond : se déplacer · molette : zoom",
             Outil.DISTANCE: "Distance : cliquez deux points (Maj = direction contrainte, Ctrl = sans accrochage)",
+            Outil.DISTANCE_XY: "Distance XY : cliquez deux points — longueur, ΔX, ΔY et angle par rapport "
+                               "à l'horizontale",
             Outil.CHAINE: "Chaîne : cliquez les points, terminez par double-clic, Entrée ou clic droit",
             Outil.SURFACE: "Surface : cliquez les sommets du contour, fermez par double-clic, Entrée ou clic droit",
             Outil.ANGLE: "Angle : point du premier bras, sommet, point du second bras",

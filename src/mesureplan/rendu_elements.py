@@ -380,6 +380,27 @@ def cadre_selection(a: Annotation, rect_texte: QRectF | None, couleur: QColor) -
 # Mesures
 # ---------------------------------------------------------------------------
 
+def jambes_decomposition(a: geo.Point, b: geo.Point, couleur: QColor) -> QGraphicsItem:
+    """Côtés ΔX (horizontal) et ΔY (vertical) en tirets, avec un petit repère d'angle droit."""
+    coin = ann.coin_decomposition(a, b)
+    chemin = QPainterPath(QPointF(*a))
+    chemin.lineTo(QPointF(*coin))
+    chemin.lineTo(QPointF(*b))
+    # Repère d'angle droit : carré de côté proportionnel au plus petit des deux côtés
+    cote = 0.12 * min(abs(b[0] - a[0]), abs(b[1] - a[1]))
+    if cote > 0:
+        sx = -1.0 if b[0] > a[0] else 1.0   # vers a, le long de l'horizontale
+        sy = 1.0 if b[1] > a[1] else -1.0   # vers b, le long de la verticale
+        chemin.moveTo(QPointF(coin[0] + sx * cote, coin[1]))
+        chemin.lineTo(QPointF(coin[0] + sx * cote, coin[1] + sy * cote))
+        chemin.lineTo(QPointF(coin[0], coin[1] + sy * cote))
+    item = QGraphicsPathItem(chemin)
+    item.setPen(stylo_cosmetique(couleur, 1.2, pointille=True))
+    item.setBrush(QBrush(Qt.BrushStyle.NoBrush))
+    item.setZValue(Z_MESURE - 1)
+    return item
+
+
 def items_mesure(type_mesure: str, points: list[geo.Point], texte: str, couleur: QColor, largeur: float,
                  taille_police: float, pointille: bool = False) -> list[QGraphicsItem]:
     """Trait, sommets et étiquette d'une mesure (ou d'une cote de référence)."""
@@ -412,6 +433,8 @@ def items_mesure(type_mesure: str, points: list[geo.Point], texte: str, couleur:
         position = geo.milieu(points[0], points[-1])
     trace.setPath(chemin)
     items: list[QGraphicsItem] = [trace]
+    if type_mesure == "distance XY" and len(points) >= 2:
+        items.append(jambes_decomposition(points[0], points[-1], couleur))
     for p in points:
         sommet = Sommet(couleur)
         sommet.setPos(QPointF(*p))

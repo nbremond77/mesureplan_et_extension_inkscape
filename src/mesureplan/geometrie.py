@@ -112,6 +112,19 @@ def tourner(p: Point, centre: Point, angle_degres: float) -> Point:
     return (centre[0] + dx * math.cos(a) + dy * math.sin(a), centre[1] - dx * math.sin(a) + dy * math.cos(a))
 
 
+def composantes(a: Point, b: Point) -> tuple[float, float, float, float]:
+    """Décomposition du vecteur a→b : (ΔX, ΔY, angle aigu / horizontale, orientation).
+
+    ΔX positif vers la droite, ΔY positif VERS LE HAUT (convention des plans, alors que
+    le repère PDF a l'axe Y vers le bas). L'angle aigu (0 à 90°) ne dépend pas de l'ordre
+    des clics ; l'orientation (]-180 ; 180]) est celle du vecteur a→b, sens trigonométrique.
+    """
+    dx = b[0] - a[0]
+    dy = -(b[1] - a[1])
+    angle_aigu = math.degrees(math.atan2(abs(dy), abs(dx))) if (dx or dy) else 0.0
+    return dx, dy, angle_aigu, math.degrees(math.atan2(dy, dx)) if (dx or dy) else 0.0
+
+
 def milieu(a: Point, b: Point) -> Point:
     """Milieu d'un segment."""
     return ((a[0] + b[0]) / 2.0, (a[1] + b[1]) / 2.0)

@@ -3,8 +3,8 @@
 #show: gabarit.with(
   titre: "Guide de l'utilisateur",
   sous-titre: "MesurePlan — mesurer, annoter et imprimer à l'échelle des plans PDF",
-  version: "1.3.0",
-  date: "25 octobre 2026",
+  version: "1.4.0",
+  date: "26 octobre 2026",
 )
 
 = Présentation
@@ -12,7 +12,7 @@
 MesurePlan exploite les plans PDF *vectoriels* reçus d'un architecte ou d'un bureau d'études,
 c'est-à-dire des PDF issus d'un logiciel de CAO : les traits restent nets quel que soit le zoom. Il
 permet de :
-- mesurer distances, chaînes de cotes, surfaces avec périmètre, et angles, à l'échelle du plan ;
+- mesurer distances (y compris décomposées en ΔX, ΔY et angle), chaînes de cotes, surfaces avec périmètre, et angles, à l'échelle du plan ;
 - vérifier et corriger l'échelle grâce à des cotes connues ;
 - annoter le plan : flèches, lignes, polylignes, polygones, rectangles, ovales, cercles, textes, avec
   couleurs, transparence et motifs techniques (hachures, béton, gravier, lames de terrasse…) ;
@@ -97,11 +97,24 @@ l'écart entre elles. Au-delà de 1 %, une cote a été mal pointée ou mal sais
   columns: (auto, auto, 1fr),
   [Touche], [Outil], [Utilisation],
   [#touche[D]], [Distance], [Deux clics.],
+  [#touche[X]], [Distance XY], [Deux clics. Affiche la longueur, sa composante horizontale ΔX, sa composante verticale ΔY et l'angle par rapport à l'horizontale ; le triangle de décomposition est tracé en tirets.],
   [#touche[L]], [Chaîne], [Clics successifs. La longueur cumulée Σ s'affiche ; double-clic, #touche[Entrée] ou clic droit pour terminer.],
   [#touche[S]], [Surface], [Clics sur les sommets du contour. Donne la surface et le périmètre ; double-clic, #touche[Entrée] ou clic droit pour fermer.],
   [#touche[A]], [Angle], [Un point du premier bras, le sommet, puis un point du second bras.],
 )
 Pendant le tracé, la valeur s'affiche en direct près du curseur.
+
+== Distance décomposée (ΔX, ΔY, angle)
+L'outil *Distance XY* sert à relever un décalage d'implantation, une pente ou un dénivelé sur une coupe.
+- *ΔX* et *ΔY* sont les projections horizontale et verticale de la distance, *par rapport à la page*. Elles
+  ne suivent pas les axes d'un bâtiment dessiné de biais.
+- L'angle affiché est l'angle *aigu* (0 à 90°) avec l'horizontale de la page. Il ne dépend pas de l'ordre
+  des deux clics.
+- Le tableau et l'étiquette donnent des valeurs absolues. L'export CSV donne ΔX et ΔY *signés* : ΔX positif
+  vers la droite, ΔY positif vers le haut.
+
+#conseil[Pour une pente en pourcentage, divisez ΔY par ΔX. Par exemple, ΔY 0,30 m sur ΔX 6,00 m donne
+5 %.]
 
 == Accrochage
 Le curseur se colle aux traits du PDF. Le symbole affiché indique la cible :
@@ -268,6 +281,7 @@ modifie avec un éditeur de texte. On peut aussi désigner un autre fichier par 
   [Touche], [Action], [Touche], [Action],
   [#touche[Ctrl+O]], [Ouvrir], [#touche[N]], [Naviguer],
   [#touche[Ctrl+S]], [Enregistrer], [#touche[D]], [Distance],
+  [], [], [#touche[X]], [Distance XY (ΔX, ΔY, angle)],
   [#touche[Ctrl+E]], [Export CSV], [#touche[L]], [Chaîne],
   [#touche[Ctrl+Maj+P]], [Export PDF annoté], [#touche[S]], [Surface],
   [#touche[Ctrl+P]], [Imprimer à l'échelle], [#touche[A]], [Angle],

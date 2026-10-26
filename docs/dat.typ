@@ -3,8 +3,8 @@
 #show: gabarit.with(
   titre: "Dossier d'architecture technique",
   sous-titre: "MesurePlan — conception, modules, données, algorithmes, qualité et déploiement",
-  version: "1.3.0",
-  date: "25 octobre 2026",
+  version: "1.4.0",
+  date: "26 octobre 2026",
 )
 
 = Objet et périmètre
@@ -18,7 +18,8 @@ de maintenir ou de faire évoluer l'application.
 == Besoin
 Exploiter des plans d'architecte reçus au format *PDF vectoriel*, sans accès aux fichiers natifs
 (DWG, DXF, IFC) :
-- mesurer distances, chaînes de cotes, surfaces, périmètres et angles *à l'échelle* ;
+- mesurer distances (y compris décomposées en ΔX, ΔY et angle), chaînes de cotes, surfaces, périmètres
+  et angles *à l'échelle* ;
 - corriger l'échelle du cartouche par calibration sur une ou plusieurs cotes connues ;
 - annoter le plan (flèches, lignes, formes, textes, motifs techniques de remplissage) ;
 - éditer après coup : déplacement, sommets, rotation ;
@@ -38,7 +39,7 @@ PDF d'origine (jamais modifié), travail collaboratif.
   [Ergonomie], [Valeur en direct près du curseur, accrochage CAO, poignées d'édition, raccourcis à une touche, annuler / rétablir.],
   [Fidélité écran / papier], [Primitives calculées une seule fois par le modèle pur, consommées à l'identique par Qt et par PyMuPDF.],
   [Robustesse], [Écriture atomique de la session, sauvegarde automatique, journal tournant, exceptions non gérées journalisées.],
-  [Testabilité], [Noyau sans dépendance graphique : 39 tests unitaires exécutables partout.],
+  [Testabilité], [Noyau sans dépendance graphique : 42 tests unitaires exécutables partout.],
   [Portabilité], [Python + Qt (PySide6) ; exécutables PyInstaller construits par intégration continue sur les trois systèmes.],
 )
 
@@ -121,7 +122,10 @@ Pour une page au cartouche 1:N : $f_"cartouche" = N times 0,0254 / 72$ mètres p
 Avec des références de calibration $(L_i^"pt", L_i^"réel")$ :
 $ f = 1/n sum_i L_i^"réel" / L_i^"pt", quad "écart" = f / f_"cartouche" - 1,
   quad "dispersion" = (max_i f_i - min_i f_i) / f . $
-Longueur réelle = longueur en pt × f ; surface réelle = surface en pt² × f². L'échelle étant supposée
+Longueur réelle = longueur en pt × f ; surface réelle = surface en pt² × f². Pour la mesure
+« distance XY », $Delta X = (x_b - x_a) f$ et $Delta Y = -(y_b - y_a) f$ (ΔY positif vers le haut, à
+l'inverse du repère PDF) ; l'angle affiché est $arctan(|Delta Y| / |Delta X|)$, compris entre 0 et 90°,
+indépendant de l'ordre des clics. Les composantes sont relatives aux axes de la *page*. L'échelle étant supposée
 *isotrope*, les angles ne dépendent pas de f.
 
 == Rotation
@@ -256,8 +260,9 @@ dizaines de kilo-octets par état).
 = Qualité
 
 == Tests automatisés
-39 tests (pytest) couvrent le noyau : géométrie et accrochage (16), annotations et persistance (8),
-mise en page d'impression (5), rotation, poignées et motifs (10), dont un test vérifiant que les
+42 tests (pytest) couvrent le noyau : géométrie et accrochage (18), annotations et persistance (9),
+mise en page d'impression (5), rotation, poignées et motifs (10). Le décompte par fichier est : noyau 18,
+annotations 9, impression 5, motifs et rotation 10, dont un test vérifiant que les
 24 motifs restent intérieurs à un contour circulaire. Ils ne nécessitent ni affichage ni PyMuPDF.
 
 == Validation complémentaire réalisée

@@ -344,7 +344,7 @@ def hex_vers_rgb(couleur: str) -> tuple[float, float, float]:
 
 
 # Caractères hors Latin-1 (non couverts par la police Helvetica standard du PDF)
-SUBSTITUTIONS_PDF = {"Σ": "Tot.", " ": " ", " ": " ", "⚠": "!", "–": "-", "—": "-",
+SUBSTITUTIONS_PDF = {"Σ": "Tot.", "Δ": "d", " ": " ", " ": " ", "⚠": "!", "–": "-", "—": "-",
                      "’": "'", "“": '"', "”": '"', "…": "...", "œ": "oe", "Œ": "OE", "€": "EUR"}
 
 
@@ -358,6 +358,11 @@ def texte_pdf(texte: str) -> str:
 # ---------------------------------------------------------------------------
 # Conversion des mesures en primitives (pour l'export PDF)
 # ---------------------------------------------------------------------------
+
+def coin_decomposition(a: geo.Point, b: geo.Point) -> geo.Point:
+    """Sommet de l'angle droit du triangle ΔX / ΔY : horizontale depuis a, verticale jusqu'à b."""
+    return (b[0], a[1])
+
 
 def primitives_mesure(mesure, echelle, formateur, couleur: str) -> list[Annotation]:
     """Transforme une mesure en annotations dessinables (trait + étiquette centrée)."""
@@ -384,6 +389,14 @@ def primitives_mesure(mesure, echelle, formateur, couleur: str) -> list[Annotati
         d = (u[0] / nu + v[0] / nv, u[1] / nu + v[1] / nv)
         nd = math.hypot(*d) or 1.0
         position = (s[0] + d[0] / nd * r * 1.6, s[1] + d[1] / nd * r * 1.6)
+    elif mesure.type is TypeMesure.DISTANCE_XY:
+        a, b = pts[0], pts[-1]
+        formes.append(Annotation(0, TypeAnnotation.LIGNE, mesure.page, [a, b], style_trait))
+        # Triangle de décomposition : horizontale puis verticale, en tirets fins
+        style_jambes = Style(couleur_trait=couleur, epaisseur=0.5, trait="tirets")
+        coin = coin_decomposition(a, b)
+        formes.append(Annotation(0, TypeAnnotation.POLYLIGNE, mesure.page, [a, coin, b], style_jambes))
+        position = geo.milieu(a, b)
     elif mesure.type is TypeMesure.CHAINE:
         formes.append(Annotation(0, TypeAnnotation.POLYLIGNE, mesure.page, pts, style_trait))
         k = (len(pts) - 1) // 2

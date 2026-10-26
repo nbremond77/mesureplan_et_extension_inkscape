@@ -183,3 +183,43 @@ def test_session_aller_retour_et_csv(tmp_path=None):
     assert n == 3
     contenu = (dossier / "export.csv").read_text(encoding="utf-8-sig")
     assert "Longueur (m)" in contenu and "90,00" in contenu
+
+
+# --- Distance décomposée (ΔX, ΔY, angle) ------------------------------------------
+
+def test_distance_xy_triangle_3_4_5():
+    from mesureplan import geometrie as g
+    # Composantes : Y vers le haut, angle aigu indépendant de l'ordre des clics
+    dx, dy, angle, orientation = g.composantes((0, 0), (4, -3))
+    assert (dx, dy) == (4, 3) and math.isclose(angle, math.degrees(math.atan2(3, 4)))
+    assert math.isclose(orientation, angle)
+    dx2, dy2, angle2, orientation2 = g.composantes((4, -3), (0, 0))
+    assert (dx2, dy2) == (-4, -3) and math.isclose(angle2, angle) and math.isclose(orientation2, angle - 180)
+
+    s = Session("plan.pdf", denominateur_defaut=100)
+    # 4,00 m vers la droite et 3,00 m vers le haut (Y PDF vers le bas)
+    m = s.ajouter_mesure(TypeMesure.DISTANCE_XY, 0, [(0, 0), (pt(4.0), -pt(3.0))])
+    v = m.valeurs(s.echelle(0))
+    assert math.isclose(v["longueur"], 5.0) and math.isclose(v["dx"], 4.0) and math.isclose(v["dy"], 3.0)
+    assert math.isclose(v["angle"], 36.86989764584402)
+    f = Formateur()
+    assert f.etiquette(m, s.echelle(0)) == "L 5,00 m\nΔX 4,00 m   ΔY 3,00 m\n36,9° / horizontale"
+    assert f.detail(m, s.echelle(0)) == "ΔX 4,00 m · ΔY 3,00 m · 36,9°"
+    assert f.valeur_principale(m, s.echelle(0)) == "5,00 m"
+
+
+def test_distance_xy_csv_et_session():
+    import tempfile
+    from pathlib import Path
+
+    dossier = Path(tempfile.mkdtemp())
+    s = Session("plan.pdf")
+    s.ajouter_mesure(TypeMesure.DISTANCE_XY, 0, [(0, 0), (-pt(2.0), pt(1.5))])  # gauche et vers le bas
+    s2 = Session.depuis_dict(s.vers_dict())
+    assert s2.mesures[0].type is TypeMesure.DISTANCE_XY
+    s2.exporter_csv(dossier / "e.csv", Formateur())
+    entete, ligne = (dossier / "e.csv").read_text(encoding="utf-8-sig").splitlines()[:2]
+    colonnes = dict(zip(entete.split(";"), ligne.split(";")))
+    assert colonnes["Longueur (m)"] == "2,5000"
+    assert colonnes["ΔX (m)"] == "-2,0000" and colonnes["ΔY (m)"] == "-1,5000"  # signés
+    assert colonnes["Angle (°)"] == "36,87"

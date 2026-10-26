@@ -26,7 +26,10 @@ conviennent : `PYTHONPATH=src python -m mesureplan`.
 2. **Calibrer** (C) : cliquez les deux extrémités d'une cote écrite sur le plan, saisissez sa valeur.
    Ajoutez une 2ᵉ cote, perpendiculaire si possible : le panneau affiche l'écart au cartouche et la
    cohérence entre références. Toutes les mesures sont recalculées instantanément.
-3. **Mesurer** : D distance · L chaîne · S surface · A angle.
+3. **Mesurer** : D distance · X distance décomposée · L chaîne · S surface · A angle.
+   - **Distance XY** (X) : longueur, ΔX horizontal, ΔY vertical et angle aigu par rapport à
+     l'horizontale de la page, avec le triangle de décomposition tracé en tirets. Dans l'export CSV,
+     ΔX et ΔY sont signés (droite et haut positifs).
    - accrochage automatique : ■ extrémité, ▲ milieu, ✕ intersection, ⧖ sur le trait ;
    - **Ctrl** maintenu : point libre · **Maj** : direction contrainte (pas de 45°, configurable) ;
    - **Entrée** / double-clic / clic droit : termine une chaîne ou ferme une surface ;
@@ -186,5 +189,3 @@ mosaïque et recouvrement, barre d'échelle), sans dépendance graphique.
   incrusté est la référence visuelle.
 - **Licence** : PyMuPDF est sous AGPL v3. Usage personnel sans contrainte ; en cas de diffusion de
   l'application, le code doit rester sous licence compatible AGPL.
-# mesureplan_et_extension_inkscape
-# mesureplan_et_extension_inkscape

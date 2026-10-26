@@ -19,9 +19,10 @@ et documentation compris. Tu travailles en ingénieur logiciel rigoureux :
 ## 2. Le produit
 
 Application de **métré, d'annotation et d'impression à l'échelle de plans PDF vectoriels** (plans
-d'architecte, sans accès aux DWG, DXF ou IFC). Version **1.3.0**. Fonctions :
+d'architecte, sans accès aux DWG, DXF ou IFC). Version **1.4.0**. Fonctions :
 
-- **Mesures** : distance, chaîne de cotes, surface + périmètre, angle, avec accrochage aux traits
+- **Mesures** : distance, distance décomposée « distance XY » (longueur, ΔX, ΔY signés avec Y vers le
+  haut, angle aigu par rapport à l'horizontale de la page), chaîne de cotes, surface + périmètre, angle, avec accrochage aux traits
   vectoriels du PDF (extrémités, milieux, intersections, sur trait).
 - **Échelle** :
   - lue dans le texte du cartouche (« Échelle 1/100 ») ;
@@ -116,9 +117,9 @@ graphique.
 ## 7. État réel et vérifications — À LIRE
 
 **Vérifié dans l'environnement de développement :**
-- 39 tests pytest du noyau, tous verts :
-  - `tests/test_noyau.py` (16) ;
-  - `tests/test_annotations.py` (8) ;
+- 42 tests pytest du noyau, tous verts :
+  - `tests/test_noyau.py` (18) ;
+  - `tests/test_annotations.py` (9) ;
   - `tests/test_impression.py` (5) ;
   - `tests/test_motifs_rotation.py` (10).
 - Chaîne complète échelle → accrochage → surface → calibration, sur `exemples/plan_essai.pdf` (traits lus
@@ -209,7 +210,7 @@ mesureplan/
 │   ├── app.py, __main__.py   point d'entrée (ouverture de fichier macOS comprise)
 │   ├── config.py, journalisation.py
 │   └── config_defaut.json, icone.png
-├── tests/                    39 tests pytest du noyau
+├── tests/                    42 tests pytest du noyau
 ├── exemples/plan_essai.pdf   plan à cotes connues (3 pages)
 ├── docs/                     dat.typ/.pdf, guide_utilisateur.typ/.pdf, commun.typ, images/
 ├── packaging/                mesureplan.spec (PyInstaller), construire.sh/.ps1, icônes, .desktop

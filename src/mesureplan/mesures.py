@@ -29,6 +29,7 @@ FACTEURS_UNITE = {"m": 1.0, "cm": 100.0, "mm": 1000.0}
 
 class TypeMesure(str, Enum):
     DISTANCE = "distance"
+    DISTANCE_XY = "distance XY"   # distance décomposée : longueur, ΔX, ΔY, angle
     CHAINE = "chaîne"
     SURFACE = "surface"
     ANGLE = "angle"
@@ -37,6 +38,7 @@ class TypeMesure(str, Enum):
 # Libellés par défaut utilisés pour nommer automatiquement les mesures
 LIBELLES = {
     TypeMesure.DISTANCE: "Distance",
+    TypeMesure.DISTANCE_XY: "Distance XY",
     TypeMesure.CHAINE: "Chaîne",
     TypeMesure.SURFACE: "Surface",
     TypeMesure.ANGLE: "Angle",
@@ -55,9 +57,15 @@ class Mesure:
     nom_personnalise: bool = False
 
     def valeurs(self, echelle: EchellePage) -> dict[str, float]:
-        """Valeurs réelles : longueur (m), surface (m²), périmètre (m), angle (°)."""
+        """Valeurs réelles : longueur (m), surface (m²), périmètre (m), angle (°), ΔX / ΔY (m)."""
         if self.type is TypeMesure.DISTANCE:
             return {"longueur": echelle.longueur_m(geo.distance(self.points[0], self.points[-1]))}
+        if self.type is TypeMesure.DISTANCE_XY:
+            # ΔX, ΔY signés (Y vers le haut) ; angle aigu par rapport à l'horizontale
+            dx, dy, angle, orientation = geo.composantes(self.points[0], self.points[-1])
+            return {"longueur": echelle.longueur_m(geo.distance(self.points[0], self.points[-1])),
+                    "dx": echelle.longueur_m(dx), "dy": echelle.longueur_m(dy),
+                    "angle": angle, "orientation": orientation}
         if self.type is TypeMesure.CHAINE:
             return {"longueur": echelle.longueur_m(geo.longueur_polyligne(self.points))}
         if self.type is TypeMesure.SURFACE:
@@ -148,6 +156,16 @@ class Formateur:
             return self.angle(v["angle"])
         return self.longueur(v["longueur"])
 
+    def detail(self, mesure: Mesure, echelle: EchellePage) -> str:
+        """Information complémentaire du tableau des mesures (colonne « Détail »)."""
+        v = mesure.valeurs(echelle)
+        if "perimetre" in v:
+            return f"P {self.longueur(v['perimetre'])}"
+        if mesure.type is TypeMesure.DISTANCE_XY:
+            return (f"ΔX {self.longueur(abs(v['dx']))} · ΔY {self.longueur(abs(v['dy']))} · "
+                    f"{self.angle(v['angle'])}")
+        return ""
+
     def etiquette(self, mesure: Mesure, echelle: EchellePage) -> str:
         """Texte affiché sur le plan (nom seulement s'il a été personnalisé)."""
         v = mesure.valeurs(echelle)
@@ -157,6 +175,10 @@ class Formateur:
             lignes = [f"Σ {self.longueur(v['longueur'])}"]
         elif mesure.type is TypeMesure.ANGLE:
             lignes = [self.angle(v["angle"])]
+        elif mesure.type is TypeMesure.DISTANCE_XY:
+            lignes = [f"L {self.longueur(v['longueur'])}",
+                      f"ΔX {self.longueur(abs(v['dx']))}   ΔY {self.longueur(abs(v['dy']))}",
+                      f"{self.angle(v['angle'])} / horizontale"]
         else:
             lignes = [self.longueur(v["longueur"])]
         if mesure.nom_personnalise:
@@ -283,7 +305,8 @@ class Session:
         def nombre(v: float | None, dec: int = 4) -> str:
             return "" if v is None else f"{v:.{dec}f}".replace(".", separateur_decimal)
 
-        entetes = ["Page", "Nom", "Type", "Longueur (m)", "Surface (m²)", "Périmètre (m)",
+        # ΔX positif vers la droite, ΔY positif vers le haut ; angle aigu / horizontale pour « distance XY »
+        entetes = ["Page", "Nom", "Type", "Longueur (m)", "ΔX (m)", "ΔY (m)", "Surface (m²)", "Périmètre (m)",
                    "Angle (°)", "Échelle appliquée (1:N)", "Source de l'échelle", "Avertissement",
                    "Points (pt PDF)"]
         lignes = 0
@@ -295,7 +318,8 @@ class Session:
                 v = m.valeurs(echelle)
                 ecrivain.writerow([
                     m.page + 1, m.nom, m.type.value,
-                    nombre(v.get("longueur")), nombre(v.get("surface")), nombre(v.get("perimetre")),
+                    nombre(v.get("longueur")), nombre(v.get("dx")), nombre(v.get("dy")),
+                    nombre(v.get("surface")), nombre(v.get("perimetre")),
                     nombre(v.get("angle"), 2),
                     nombre(echelle.denominateur_effectif, 2), echelle.libelle_source,
                     m.avertissement or "",

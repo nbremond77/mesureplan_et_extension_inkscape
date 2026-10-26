@@ -45,6 +45,7 @@ PAS_ROTATION_CONTRAINTE = 15.0            # degrés, avec Maj
 class Outil(Enum):
     NAVIGATION = "Naviguer"
     DISTANCE = "Distance"
+    DISTANCE_XY = "Distance XY"
     CHAINE = "Chaîne"
     SURFACE = "Surface"
     ANGLE = "Angle"
@@ -71,7 +72,7 @@ ANNOTATION_PAR_OUTIL = {
 OUTILS_GLISSER = {o for o, t in ANNOTATION_PAR_OUTIL.items() if t in ann.TYPES_GLISSER}
 
 # Outils terminés automatiquement après un nombre fixe de points
-POINTS_FIXES = {Outil.DISTANCE: 2, Outil.ANGLE: 3, Outil.CALIBRATION: 2}
+POINTS_FIXES = {Outil.DISTANCE: 2, Outil.DISTANCE_XY: 2, Outil.ANGLE: 3, Outil.CALIBRATION: 2}
 # Outils à nombre de points libre : minimum requis pour terminer
 POINTS_MINIMUM = {Outil.CHAINE: 2, Outil.SURFACE: 3, Outil.POLYLIGNE: 2, Outil.POLYGONE: 3}
 
@@ -710,6 +711,12 @@ class VuePlan(QGraphicsView):
             chemin.lineTo(QPointF(*p))
         if self._outil is Outil.SURFACE and len(points) >= 3:
             chemin.lineTo(QPointF(*points[0]))
+        if self._outil is Outil.DISTANCE_XY and len(points) == 2:
+            # Aperçu du triangle de décomposition ΔX / ΔY
+            coin = ann.coin_decomposition(points[0], points[1])
+            chemin.moveTo(QPointF(*points[0]))
+            chemin.lineTo(QPointF(*coin))
+            chemin.lineTo(QPointF(*points[1]))
         couleur = self._couleur_reference if self._outil is Outil.CALIBRATION else self._couleur_apercu
         self._apercu.setPen(stylo_cosmetique(couleur, 2.0, pointille=True))
         if self._outil is Outil.SURFACE:

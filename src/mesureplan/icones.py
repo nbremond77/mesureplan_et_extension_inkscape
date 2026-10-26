@@ -40,6 +40,17 @@ def icone(nom: str, taille: int = 32) -> QIcon:
         p.setPen(_stylo(COULEUR_TRAIT, 2.0))
         p.drawLine(QPointF(3, 18), QPointF(7, 26))
         p.drawLine(QPointF(25, 6), QPointF(29, 14))
+    elif nom == "distance_xy":
+        # Hypoténuse pleine + côtés ΔX / ΔY en tirets
+        stylo_tirets = _stylo(COULEUR_TRAIT, 1.8)
+        stylo_tirets.setStyle(Qt.PenStyle.DashLine)
+        p.setPen(stylo_tirets)
+        p.drawLine(QPointF(5, 26), QPointF(27, 26))
+        p.drawLine(QPointF(27, 26), QPointF(27, 6))
+        p.setPen(_stylo(COULEUR_ACCENT, 2.6))
+        p.drawLine(QPointF(5, 26), QPointF(27, 6))
+        p.setPen(_stylo(COULEUR_TRAIT, 1.4))
+        p.drawPolyline(QPolygonF([QPointF(23, 26), QPointF(23, 22), QPointF(27, 22)]))
     elif nom == "chaine":
         p.setPen(_stylo(COULEUR_ACCENT, 2.6))
         p.drawPolyline(QPolygonF([QPointF(4, 26), QPointF(10, 10), QPointF(20, 20), QPointF(28, 6)]))

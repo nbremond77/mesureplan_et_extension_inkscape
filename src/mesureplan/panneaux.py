@@ -161,7 +161,7 @@ class PanneauMesures(QWidget):
     unite_changee = Signal(str)
     export_demande = Signal()
 
-    COLONNES = ["Nom", "Type", "Valeur", "Périmètre"]
+    COLONNES = ["Nom", "Type", "Valeur", "Détail"]
 
     def __init__(self, formateur: Formateur, parent=None) -> None:
         super().__init__(parent)
@@ -249,8 +249,7 @@ class PanneauMesures(QWidget):
         self._identifiants = [m.identifiant for m in mesures]
         self.table.setRowCount(len(mesures))
         for ligne, m in enumerate(mesures):
-            v = m.valeurs(echelle)
-            perimetre = formateur.longueur(v["perimetre"]) if "perimetre" in v else ""
+            perimetre = formateur.detail(m, echelle)  # périmètre, ou ΔX / ΔY / angle
             valeur = formateur.valeur_principale(m, echelle)
             if m.avertissement:
                 valeur = "⚠ " + valeur
@@ -273,7 +272,7 @@ class PanneauMesures(QWidget):
         portee = "sélection" if len(concernees) != len(mesures) else "page"
         surfaces = [m.valeurs(echelle)["surface"] for m in concernees if m.type is TypeMesure.SURFACE]
         longueurs = [m.valeurs(echelle)["longueur"] for m in concernees
-                     if m.type in (TypeMesure.DISTANCE, TypeMesure.CHAINE)]
+                     if m.type in (TypeMesure.DISTANCE, TypeMesure.DISTANCE_XY, TypeMesure.CHAINE)]
         morceaux = []
         if surfaces:
             morceaux.append(f"Σ surfaces : <b>{formateur.surface(sum(surfaces))}</b> ({len(surfaces)})")

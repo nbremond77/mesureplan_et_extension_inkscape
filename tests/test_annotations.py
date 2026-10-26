@@ -90,3 +90,12 @@ def test_primitives_des_mesures():
     angle = s.ajouter_mesure(TypeMesure.ANGLE, 0, [(10, 0), (0, 0), (0, 10)])
     texte = ann.primitives_mesure(angle, EchellePage(100), Formateur(), "#E4572E")[1]
     assert texte.texte == "90,0°" and texte.points[0][0] > 0 and texte.points[0][1] > 0
+
+
+def test_primitives_distance_xy():
+    s = Session("plan.pdf")
+    m = s.ajouter_mesure(TypeMesure.DISTANCE_XY, 0, [(0, 0), (100, -50)])
+    formes = ann.primitives_mesure(m, EchellePage(100), Formateur(), "#E4572E")
+    assert [f.type for f in formes] == [TypeAnnotation.LIGNE, TypeAnnotation.POLYLIGNE, TypeAnnotation.TEXTE]
+    assert formes[1].points == [(0, 0), (100, 0), (100, -50)] and formes[1].style.trait == "tirets"
+    assert ann.texte_pdf(formes[2].texte).startswith("L ") and "dX" in ann.texte_pdf(formes[2].texte)
