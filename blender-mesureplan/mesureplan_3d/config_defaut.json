@@ -1,0 +1,35 @@
+{
+  "journalisation": {
+    "niveau": "INFO",
+    "taille_max_octets": 524288,
+    "nombre_sauvegardes": 3
+  },
+  "accrochage": {
+    "tolerance_pixels": 12,
+    "sommets": true,
+    "milieux": true,
+    "aretes": true,
+    "faces": true,
+    "points_des_mesures": true
+  },
+  "affichage": {
+    "unite": "m",
+    "decimales": { "m": 2, "cm": 1, "mm": 0 },
+    "decimales_surface": 2,
+    "decimales_angle": 1,
+    "taille_police": 13,
+    "epaisseur_trait": 2.0,
+    "couleur_mesures": [0.894, 0.341, 0.180, 1.0],
+    "couleur_selection": [0.122, 0.467, 0.816, 1.0],
+    "couleur_apercu": [0.847, 0.106, 0.376, 1.0],
+    "couleur_x": [0.95, 0.25, 0.30, 1.0],
+    "couleur_y": [0.45, 0.80, 0.20, 1.0],
+    "couleur_z": [0.25, 0.55, 1.00, 1.0],
+    "fond_etiquettes": [0.10, 0.11, 0.13, 0.80],
+    "tolerance_planeite_m": 0.005
+  },
+  "export": {
+    "separateur_csv": ";",
+    "separateur_decimal": ","
+  }
+}

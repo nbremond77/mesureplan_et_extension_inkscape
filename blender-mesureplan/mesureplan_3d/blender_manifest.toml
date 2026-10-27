@@ -1,0 +1,20 @@
+schema_version = "1.0.0"
+
+# Identifiant unique de l'extension (nom du module Python : ne pas modifier)
+id = "mesureplan_3d"
+version = "1.0.0"
+name = "MesurePlan 3D"
+tagline = "Mesures 3D avec delta X, Y, Z, pentes, surfaces et calibration"
+maintainer = "Bernard"
+type = "add-on"
+
+website = "https://github.com/nbremond77/mesureplan_et_extension_inkscape"
+tags = ["3D View", "Modeling", "User Interface"]
+
+blender_version_min = "4.2.0"
+
+# Les extensions Blender doivent être sous licence compatible GPL
+license = ["SPDX:GPL-3.0-or-later"]
+
+[permissions]
+files = "Export des mesures en CSV et journal de fonctionnement"
